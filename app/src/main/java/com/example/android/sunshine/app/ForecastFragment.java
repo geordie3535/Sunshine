@@ -335,5 +335,17 @@ public class ForecastFragment extends Fragment {
             // This will only happen if there was an error getting or parsing the forecast.
             return null;
         }
+
+        protected void onPostExecute (String[] result){
+
+            if(result!=null){
+                mForecastAdapter.clear();           //result 0 a esit degilse , mock datayi siliyoruz.
+                for (String dayForecastStr : result){   //yerine dayForecastStr'yi koyuyoruz .
+                    mForecastAdapter.add(dayForecastStr);   //ve Adaptore ekliyoruz.
+                }
+
+            }
+
+        }
     }
 }
