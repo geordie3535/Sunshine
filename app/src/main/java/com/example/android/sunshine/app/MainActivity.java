@@ -26,17 +26,21 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null) {               //IF YOU ARE MAKING FIRST TIME INITIALIZATION
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new ForecastFragment())
                     .commit();
+
+            //getSupportFragmentManager (): Return the FragmentManager for interacting with fragments associated with this activity.
+            //beginTransaction() : Start a series of edit operations on the Fragments associated with this FragmentManager.
+            //commit() : Schedules a commit of this transaction.
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);   //getMenuInflater() : method of Activity class
         return true;
     }
 
