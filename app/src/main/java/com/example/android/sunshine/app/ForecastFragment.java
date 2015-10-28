@@ -27,8 +27,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -121,13 +123,24 @@ public class ForecastFragment extends Fragment {
                         R.id.list_item_forecast_textview, // The ID of the textview to populate.
                         weekForecast);
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         //public View inflate (int resource, ViewGroup root, boolean attachToRoot):
 
         // Get a reference to the ListView, and attach this adapter to it. we cast it from R and indicate it's a ListView by CASTING.
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick (AdapterView<?> adapterView, View view, int position, long l){
+                String text = mForecastAdapter.getItem(position);
+                int duration = Toast.LENGTH_SHORT;
 
+                Toast toast = Toast.makeText(getActivity(), text, duration);
+                toast.show();
+                //Complete version : Toast.makeText(getActivity(),text,Toast.LENGTH_SHORT).show();
+
+            }
+        });
         return rootView;
     }
 
