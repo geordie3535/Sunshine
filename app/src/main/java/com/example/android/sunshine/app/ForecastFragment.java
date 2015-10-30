@@ -46,8 +46,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
@@ -90,11 +88,7 @@ public class ForecastFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {    //if Refresh button is clicked .
-            FetchWeatherTask weatherTask = new FetchWeatherTask();  //initiate FetchWeatherTask
-            //removed the hardcoded weatherTask.execute("94043") here
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String location = prefs.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
-            weatherTask.execute(location);
+            updateWeather();
             return true;                //for now we just return true.
         }
         return super.onOptionsItemSelected(item);
@@ -106,16 +100,7 @@ public class ForecastFragment extends Fragment {
         // Called to have the fragment instantiate its user interface view. This is optional,
         // Returns the View for the fragment's UI, or null.
 
-        String[] data = { // Create some dummy data for the ListView.  Here's a sample weekly forecast
-                "Mon 6/23 - Sunny - 31/17",
-                "Tue 6/24 - Foggy - 21/8",
-                "Wed 6/25 - Cloudy - 22/17",
-                "Thurs 6/26 - Rainy - 18/11",
-                "Fri 6/27 - Foggy - 21/10",
-                "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
-                "Sun 6/29 - Sunny - 20/7"
-        };
-        List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
+
 
         // Now that we have some dummy forecast data, create an ArrayAdapter.
         // The ArrayAdapter will take data from a source (like our dummy forecast) and
@@ -126,7 +111,7 @@ public class ForecastFragment extends Fragment {
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_forecast, // The name of the layout ID.
                         R.id.list_item_forecast_textview, // The ID of the textview to populate.
-                        weekForecast);
+                        new ArrayList<String>());
 
         final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         //public View inflate (int resource, ViewGroup root, boolean attachToRoot):
@@ -148,6 +133,21 @@ public class ForecastFragment extends Fragment {
         });
         return rootView;
     }
+
+    private void updateWeather(){
+        FetchWeatherTask weatherTask = new FetchWeatherTask();  //initiate FetchWeatherTask
+        //removed the hardcoded weatherTask.execute("94043") here
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = prefs.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+        weatherTask.execute(location);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        updateWeather();
+    }
+
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {   //Returns String[] now as output.
 //AsyncTask : enables proper and easy use of the UI thread. This class allows to perform background
