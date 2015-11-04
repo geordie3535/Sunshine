@@ -1,10 +1,10 @@
 package com.example.android.sunshine.app;
 
-import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DetailActivity extends ActionBarActivity {
@@ -21,6 +23,14 @@ public class DetailActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+
+        Intent intent = this.getIntent();
+        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+            String appName = intent.getStringExtra(Intent.EXTRA_TEXT).substring(0,10);
+            getSupportActionBar().setTitle(appName);
+        }
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new DetailFragment())
@@ -79,7 +89,10 @@ public class DetailActivity extends ActionBarActivity {
                 ((TextView) rootView.findViewById(R.id.detail_text))
                         .setText(mForecastStr);
             }
-
+            ImageView spaceshipImage = (ImageView) rootView.findViewById(R.id.sun);
+            spaceshipImage.setImageResource(R.drawable.sun);
+            spaceshipImage.startAnimation(
+                    AnimationUtils.loadAnimation(getActivity(), R.anim.rotater) );
             return rootView;
         }
 
@@ -112,5 +125,7 @@ public class DetailActivity extends ActionBarActivity {
                     mForecastStr + FORECAST_SHARE_HASHTAG);
             return shareIntent;
         }
+
+
     }
 }

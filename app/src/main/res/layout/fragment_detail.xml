@@ -8,6 +8,15 @@
 
     <TextView android:layout_width="wrap_content"
         android:id="@+id/detail_text"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/abc_text_size_large_material"/>
+
+    <ImageView
+        android:id="@+id/sun"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

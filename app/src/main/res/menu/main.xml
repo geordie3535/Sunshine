@@ -9,4 +9,7 @@
     <item android:id="@+id/action_map"
         android:title="@string/action_map"
         app:showAsAction="never" />
+    <item android:id="@+id/popup"
+        android:title="Check Your Health"
+        app:showAsAction="never" />
 </menu>

@@ -28,18 +28,34 @@ import android.view.MenuItem;
 public class MainActivity extends ActionBarActivity {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
-
+    //Returns the simple name of the class represented by this Class as defined in the source code.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Called when the activity is starting. This is where most initialization should go:
+        // calling setContentView(int) to inflate the activity's UI, using findViewById(int)
+        // to programmatically interact with widgets in the UI
         super.onCreate(savedInstanceState);
+        //Derived classes must call through to the super class's implementation of this method.
+        // If they do not, an exception will be thrown.
+        //If the activity is being re-initialized after previously being shut down then this Bundle
+        // contains the data it most recently supplied in onSaveInstanceState(Bundle).
+        // Note: Otherwise it is null.
+
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setTitle("Serhan's Weather App");
+        //Set the activity content from a layout resource. The resource will be inflated,
+        //adding all top-level views to the activity.
+
         if (savedInstanceState == null) {               //IF YOU ARE MAKING FIRST TIME INITIALIZATION
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new ForecastFragment())
                     .commit();
 
             //getSupportFragmentManager (): Return the FragmentManager for interacting with fragments associated with this activity.
+            //(FragmentManager:Interface for interacting with Fragment objects inside of an Activity)
             //beginTransaction() : Start a series of edit operations on the Fragments associated with this FragmentManager.
+            //add() : Add a fragment to the activity state. This fragment may optionally also have its view
+            // (if Fragment.onCreateView returns non-null) into a container view of the activity.
             //commit() : Schedules a commit of this transaction.
         }
     }
@@ -68,6 +84,12 @@ public class MainActivity extends ActionBarActivity {
                         openPreferredLocationInMap();
                         return true;
                     }
+        if (id == R.id.popup){
+            YesNoActivity myDiag = new YesNoActivity();
+            myDiag.show(getFragmentManager(), "Diag");
+
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 

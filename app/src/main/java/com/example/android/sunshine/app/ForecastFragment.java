@@ -15,6 +15,7 @@
  */
 package com.example.android.sunshine.app;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -33,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -149,13 +151,42 @@ public class ForecastFragment extends Fragment {
     }
 
 
-    public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {   //Returns String[] now as output.
+    public class FetchWeatherTask extends AsyncTask<String, Integer, String[]> {   //Returns String[] now as output.
 //AsyncTask : enables proper and easy use of the UI thread. This class allows to perform background
 //operations and publish results on the UI thread without having to manipulate threads and/or handlers.
 //AsyncTasks should ideally be used for short operations (a few seconds at the most.)
 // If you need to keep threads running for long periods of time,it is highly recommended you use the various APIs
 // provided by the java.util.concurrent package such as Executor, ThreadPoolExecutor and FutureTask.
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+
+        private ProgressDialog dialog;
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+
+            int current = progress[0];
+            int total = progress[1];
+
+            float percentage = 100 * (float) current / (float) total;
+
+            dialog.setProgress((int) percentage);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.dialog = new ProgressDialog(getActivity());
+            this.dialog.setIndeterminate(false);
+            this.dialog.setMax(100);
+            this.dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            this.dialog.setCancelable(false);
+            this.dialog.setTitle("Updating");
+            this.dialog.setMessage("Parsing Data");
+            this.dialog.show();
+
+            // progress = 0;
+        }
+
 
         private String getReadableDateString(long time){
             // Because the API returns a unix timestamp (measured in seconds),
@@ -259,14 +290,19 @@ public class ForecastFragment extends Fragment {
 
                 highAndLow = formatHighLows(high, low, unitType);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
+
+                publishProgress(i, weatherArray.length()-1);
             }
 
             for (String s : resultStrs) {
                 Log.v(LOG_TAG, "Forecast entry: " + s);
             }
+
             return resultStrs;
 
         }
+
+
 
         @Override
         protected String[] doInBackground(String... params) {   //String param "94043" is passed here. It will return String too.
@@ -359,7 +395,10 @@ public class ForecastFragment extends Fragment {
                 }
             }
             try {
-                return getWeatherDataFromJson(forecastJsonStr, numDays);    //Returning this String.
+
+                return getWeatherDataFromJson(forecastJsonStr, numDays);
+
+                //Returning this String.
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
@@ -370,6 +409,8 @@ public class ForecastFragment extends Fragment {
         }
 
         protected void onPostExecute (String[] result){
+            super.onPostExecute(result);
+
 
             if(result!=null){
                 mForecastAdapter.clear();           //result 0 a esit degilse , mock datayi siliyoruz.
@@ -379,6 +420,9 @@ public class ForecastFragment extends Fragment {
 
             }
 
+            dialog.dismiss();
+            Toast toast = Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT);
+                    toast.show();
         }
     }
 }
