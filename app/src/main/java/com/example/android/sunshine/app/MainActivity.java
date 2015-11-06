@@ -42,7 +42,6 @@ public class MainActivity extends ActionBarActivity {
         // Note: Otherwise it is null.
 
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setTitle("Serhan's Weather App");
         //Set the activity content from a layout resource. The resource will be inflated,
         //adding all top-level views to the activity.
 
@@ -51,6 +50,7 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new ForecastFragment())
                     .commit();
 
+            getSupportActionBar().setTitle(ForecastFragment.location_name);
             //getSupportFragmentManager (): Return the FragmentManager for interacting with fragments associated with this activity.
             //(FragmentManager:Interface for interacting with Fragment objects inside of an Activity)
             //beginTransaction() : Start a series of edit operations on the Fragments associated with this FragmentManager.

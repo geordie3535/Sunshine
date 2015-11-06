@@ -55,8 +55,9 @@ import java.util.ArrayList;
 public class ForecastFragment extends Fragment {
 
     private ArrayAdapter<String> mForecastAdapter;  //initializing the ArrayAdapter holds Strings
-
+    public static String location_name;
     public ForecastFragment() {     //no-arg constructor , no needed actually but just in case if we want to automate it.
+
     }
 
     @Override
@@ -74,6 +75,7 @@ public class ForecastFragment extends Fragment {
         //Initialize the contents of the Activity's standard options menu. You should place your menu items in to menu.
         // For this method to be called, you must have first called setHasOptionsMenu(boolean).
         inflater.inflate(R.menu.forecastfragment, menu);
+
         // MenuInflater: This class is used to instantiate menu XML files into Menu objects.
         //public void inflate (int menuRes, Menu menu) : Inflate a menu hierarchy from the specified XML resource.
 
@@ -115,15 +117,16 @@ public class ForecastFragment extends Fragment {
                         R.id.list_item_forecast_textview, // The ID of the textview to populate.
                         new ArrayList<String>());
 
+        //location_name = updateName();
         final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         //public View inflate (int resource, ViewGroup root, boolean attachToRoot):
 
         // Get a reference to the ListView, and attach this adapter to it. we cast it from R and indicate it's a ListView by CASTING.
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick (AdapterView<?> adapterView, View view, int position, long l){
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String forecast = mForecastAdapter.getItem(position);
 
                 Intent intent = new Intent(getActivity(), DetailActivity.class)
@@ -142,6 +145,15 @@ public class ForecastFragment extends Fragment {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String location = prefs.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
         weatherTask.execute(location);
+
+    }
+    private String updateName(){
+        FetchWeatherTask weatherTask = new FetchWeatherTask();  //initiate FetchWeatherTask
+        //removed the hardcoded weatherTask.execute("94043") here
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = prefs.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+        weatherTask.execute(location);
+        return location_name;
     }
 
     @Override
@@ -222,6 +234,8 @@ public class ForecastFragment extends Fragment {
          * Fortunately parsing is easy:  constructor takes the JSON string and converts it
          * into an Object hierarchy for us.
          */
+
+
         private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
                 throws JSONException {
 
@@ -232,14 +246,14 @@ public class ForecastFragment extends Fragment {
             final String OWM_MAX = "max";
             final String OWM_MIN = "min";
             final String OWM_DESCRIPTION = "main";
-
+            final String OWM_CITY = "city";
+            final String OWM_NAME = "name";
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
             JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
             // OWM returns daily forecasts based upon the local time of the city that is being
             // asked for, which means that we need to know the GMT offset to translate this data
             // properly.
-
             // Since this data is also sent in-order and the first day is always the
             // current day, we're going to take advantage of that to get a nice
             // normalized UTC date for all of our weather.
@@ -287,6 +301,9 @@ public class ForecastFragment extends Fragment {
                 JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
                 double high = temperatureObject.getDouble(OWM_MAX);
                 double low = temperatureObject.getDouble(OWM_MIN);
+
+                JSONObject weatherName = forecastJson.getJSONObject(OWM_CITY);
+                location_name = weatherName.getString(OWM_NAME);
 
                 highAndLow = formatHighLows(high, low, unitType);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
