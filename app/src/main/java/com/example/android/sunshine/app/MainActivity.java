@@ -44,6 +44,38 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v("onStart","STARTED");
+        // The activity is about to become visible.
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v("onResume", "STARTED");
+        // The activity has become visible (it is now "resumed").
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.v("onPause", "STARTED");
+        // Another activity is taking focus (this activity is about to be "paused").
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.v("onStop", "STARTED");
+        // The activity is no longer visible (it is now "stopped")
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v("onDestroy", "STARTED");
+        // The activity is about to be destroyed.
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
