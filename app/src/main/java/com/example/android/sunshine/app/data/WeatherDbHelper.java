@@ -81,6 +81,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(SQL_CREATE_LOCATION_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_WEATHER_TABLE);
+        //Execute a single SQL statement that is NOT a SELECT or any other SQL statement that returns data.
     }
 
     @Override
