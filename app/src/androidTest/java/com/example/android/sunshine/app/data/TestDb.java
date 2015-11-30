@@ -37,6 +37,11 @@ import android.test.AndroidTestCase;
 
 import java.util.HashSet;
 
+/**
+ *  Tests the Database involving WeatherContract.java and WeatherDbHelper.java
+ *  Deletes database at first with deleteTheDatabase()
+ *
+ **/
 public class TestDb extends AndroidTestCase {
 
     public static final String LOG_TAG = TestDb.class.getSimpleName();
@@ -69,17 +74,36 @@ public class TestDb extends AndroidTestCase {
         final HashSet<String> tableNameHashSet = new HashSet<String>();
         tableNameHashSet.add(WeatherContract.LocationEntry.TABLE_NAME);
         tableNameHashSet.add(WeatherContract.WeatherEntry.TABLE_NAME);
+        /** DIFFERENCE BETWEEN HASHSET and HASHMAP
+         * HashSet (Implementation of a Set) is a set, e.g. {1,2,3,4,5}
+         HashMap (Implementation of a Map) is a key -> value (key to value) map, e.g. {a -> 1, b -> 2, c -> 2, d -> 1}
 
+         Notice in my example above that in the HashMap there must not be duplicate keys, but it may have duplicate values.
+         In the HashSet, there must be no duplicate elements.
+         */
+
+        /** DIFFERENCE BETWEEN LISTS AND SETS.
+         * List<E>
+         * An ordered collection (also known as a sequence). The user of this interface has precise control over
+         * where in the list each element is inserted. The user can access elements by their integer index (position in the list),
+         * and search for elements in the list.
+         *
+         * Set<E>
+         * A collection that contains no duplicate elements. More formally, sets contain no pair of elements e1 and e2
+         * such that e1.equals(e2), and at most one null element.
+         * As implied by its name, this interface models the mathematical set abstraction.
+         */
         mContext.deleteDatabase(WeatherDbHelper.DATABASE_NAME);
         SQLiteDatabase db = new WeatherDbHelper(
                 this.mContext).getWritableDatabase();
-        assertEquals(true, db.isOpen());
+        assertEquals(true, db.isOpen());    //database is open
 
         // have we created the tables we want?
         Cursor c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
-
+        //Runs the provided SQL and returns a Cursor over the result set.
+        //RETURNS :  A Cursor object, which is positioned before the first entry.
         assertTrue("Error: This means that the database has not been created correctly",
-                c.moveToFirst());
+                c.moveToFirst()); //moveToFirst() returns false if the row is empty.So the message will be thrown.
 
         // verify that the tables have been created
         do {
@@ -126,6 +150,11 @@ public class TestDb extends AndroidTestCase {
         also make use of the ValidateCurrentRecord function from within TestUtilities.
     */
     public void testLocationTable() {
+        /**
+         * Testing the creation of location table.
+         * Code is at insertLocation() as we use exactly the same while making weather table
+         * as the location table is the foreign key of it .
+         */
         insertLocation();
     }
 
@@ -136,6 +165,15 @@ public class TestDb extends AndroidTestCase {
         also make use of the validateCurrentRecord function from within TestUtilities.
      */
     public void testWeatherTable() {
+        /**
+         * Testing the creation of weather table
+         * 1)Gets the created locationRowId from insertLocation(); function
+         * 2)Creates a writable database , inserts some random content values to that database from the
+         *   TestUtilities.java
+         * 3)Queries the database to return a cursor and moveToFirst to see if there is the desired
+         *   entry by assertTrue function .
+         * 4)assertFalse() function with moveToNext() as we don't expect another entry to our table.
+         */
         // First insert the location, and then use the locationRowId to insert
         // the weather. Make sure to cover as many failure cases as you can.
 
@@ -197,6 +235,9 @@ public class TestDb extends AndroidTestCase {
         testWeatherTable and testLocationTable.
      */
     public long insertLocation() {
+        /**
+         * Code to generate a location table.
+         */
         // First step: Get reference to writable database
         // If there's an error in those massive SQL table creation Strings,
         // errors will be thrown here when you try to get a writable database.

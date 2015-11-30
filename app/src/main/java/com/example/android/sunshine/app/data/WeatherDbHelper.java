@@ -23,7 +23,7 @@ import com.example.android.sunshine.app.data.WeatherContract.LocationEntry;
 import com.example.android.sunshine.app.data.WeatherContract.WeatherEntry;
 
 /**
- * Manages a local database for weather data.
+ * Manages a local database creating and version management for weather data.
  */
 public class WeatherDbHelper extends SQLiteOpenHelper {
 

@@ -20,6 +20,10 @@ import java.util.Set;
     Content Provider.  Note that you'll want your WeatherContract class to exactly match the one
     in our solution to use these as-given.
  */
+
+
+//Some ready-baked test code to test the dataase and Content Providers .
+
 public class TestUtilities extends AndroidTestCase {
     static final String TEST_LOCATION = "99705";
     static final long TEST_DATE = 1419033600L;  // December 20th, 2014
@@ -30,7 +34,6 @@ public class TestUtilities extends AndroidTestCase {
         valueCursor.close();
     }
 
-    @Override
 
     static void validateCurrentRecord(String error, Cursor valueCursor, ContentValues expectedValues) {
         Set<Map.Entry<String, Object>> valueSet = expectedValues.valueSet();

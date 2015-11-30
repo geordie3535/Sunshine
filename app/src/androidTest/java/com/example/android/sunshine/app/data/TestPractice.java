@@ -3,8 +3,11 @@ package com.example.android.sunshine.app.data;
 import android.test.AndroidTestCase;
 
 public class TestPractice extends AndroidTestCase {
-    /*
+    /**
+     *  NOT RELATED CODE WITH SUNSHINE.
         This gets run before every test.
+        Just a random test to see if there's a problem with compiler.
+
      */
     @Override
     protected void setUp() throws Exception {
