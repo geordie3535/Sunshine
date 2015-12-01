@@ -51,8 +51,10 @@ public class WeatherContract {
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOCATION;
+        //Cursors that can return more than one item are prefixed CURSOR_DIR_BASE_TYPE string
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOCATION;
+        //Cursor that can return a single item are prefixed CURSOR_ITEM_BASE_TYPE string.
 
         // Table name
         public static final String TABLE_NAME = "location";
@@ -123,7 +125,7 @@ public class WeatherContract {
             Student: Fill in this buildWeatherLocation function
          */
         public static Uri buildWeatherLocation(String locationSetting) {
-            return null;
+            return CONTENT_URI.buildUpon().appendPath(locationSetting).build();
         }
 
         public static Uri buildWeatherLocationWithStartDate(
